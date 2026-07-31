@@ -1,0 +1,610 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SEBI Compliant AI Analyst Platform",
+    "description": "SEBI-compliant RAG financial document parsing, chunking, and compliance audit log dashboard backend.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Read Root",
+        "operationId": "read_root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ingest/document": {
+      "post": {
+        "tags": [
+          "ingest"
+        ],
+        "summary": "Ingest Document",
+        "operationId": "ingest_document_ingest_document_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_ingest_document_ingest_document_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze/query": {
+      "post": {
+        "tags": [
+          "analyze"
+        ],
+        "summary": "Query Financial Data",
+        "operationId": "query_financial_data_analyze_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/analyst": {
+      "post": {
+        "tags": [
+          "compliance"
+        ],
+        "summary": "Register Analyst",
+        "operationId": "register_analyst_compliance_analyst_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchAnalystCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchAnalystResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/analysts": {
+      "get": {
+        "tags": [
+          "compliance"
+        ],
+        "summary": "List Analysts",
+        "operationId": "list_analysts_compliance_analysts_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResearchAnalystResponse"
+                  },
+                  "title": "Response List Analysts Compliance Analysts Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/audit-logs": {
+      "get": {
+        "tags": [
+          "compliance"
+        ],
+        "summary": "Get Audit Logs",
+        "operationId": "get_audit_logs_compliance_audit_logs_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "Max logs to retrieve"
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            },
+            "description": "Filter logs by action"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLogResponse"
+                  },
+                  "title": "Response Get Audit Logs Compliance Audit Logs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisQuery": {
+        "properties": {
+          "analyst_id": {
+            "type": "integer",
+            "title": "Analyst Id",
+            "description": "Licensed analyst querying the system"
+          },
+          "query_text": {
+            "type": "string",
+            "title": "Query Text",
+            "description": "The query regarding the financial documents"
+          },
+          "ticker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticker",
+            "description": "Metadata filter: stock ticker (e.g. TCS, RELIANCE)"
+          },
+          "fiscal_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiscal Year",
+            "description": "Metadata filter: fiscal year (e.g. 2024, 2025)"
+          },
+          "custom_chunk_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Chunk Size",
+            "description": "Override default RAG chunk size"
+          },
+          "custom_chunk_overlap": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Chunk Overlap",
+            "description": "Override default RAG chunk overlap"
+          }
+        },
+        "type": "object",
+        "required": [
+          "analyst_id",
+          "query_text"
+        ],
+        "title": "AnalysisQuery"
+      },
+      "AnalysisResponse": {
+        "properties": {
+          "report_id": {
+            "type": "integer",
+            "title": "Report Id"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "retrieved_chunks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Retrieved Chunks"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "compliance_disclosures": {
+            "type": "string",
+            "title": "Compliance Disclosures"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "report_id",
+          "query",
+          "retrieved_chunks",
+          "answer",
+          "compliance_disclosures",
+          "created_at"
+        ],
+        "title": "AnalysisResponse"
+      },
+      "AuditLogResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "details": {
+            "type": "string",
+            "title": "Details"
+          },
+          "performed_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Performed By"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "action",
+          "details",
+          "timestamp"
+        ],
+        "title": "AuditLogResponse"
+      },
+      "Body_ingest_document_ingest_document_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "default": 500
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "default": 100
+          },
+          "ticker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticker",
+            "description": "The ticker associated with the financial document"
+          },
+          "fiscal_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiscal Year",
+            "description": "The fiscal year associated with the financial document"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_ingest_document_ingest_document_post"
+      },
+      "ChunkResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "chunk_index": {
+            "type": "integer",
+            "title": "Chunk Index"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "chunk_index",
+          "content"
+        ],
+        "title": "ChunkResponse"
+      },
+      "DocumentResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Uploaded At"
+          },
+          "chunks": {
+            "items": {
+              "$ref": "#/components/schemas/ChunkResponse"
+            },
+            "type": "array",
+            "title": "Chunks",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "filename",
+          "uploaded_at"
+        ],
+        "title": "DocumentResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ResearchAnalystCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Full official name of the research analyst"
+          },
+          "sebi_registration_no": {
+            "type": "string",
+            "title": "Sebi Registration No",
+            "description": "Unique SEBI issued registration number"
+          },
+          "has_interest_disclosing_statement": {
+            "type": "boolean",
+            "title": "Has Interest Disclosing Statement",
+            "description": "True if they have conflict or holding to declare",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "sebi_registration_no"
+        ],
+        "title": "ResearchAnalystCreate"
+      },
+      "ResearchAnalystResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "sebi_registration_no": {
+            "type": "string",
+            "title": "Sebi Registration No"
+          },
+          "has_interest_disclosing_statement": {
+            "type": "boolean",
+            "title": "Has Interest Disclosing Statement"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "sebi_registration_no",
+          "has_interest_disclosing_statement",
+          "created_at"
+        ],
+        "title": "ResearchAnalystResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
+
