@@ -7,3 +7,7 @@ pytest>=8.0.0
 httpx>=0.27.0
 python-multipart>=0.0.9
 numpy>=1.26.0
+pdfplumber>=0.11.0
+
+# Optional: only needed if LLM_PROVIDER=anthropic in .env
+anthropic>=0.40.0

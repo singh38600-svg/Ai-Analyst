@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  eiap:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./eiap.db:/app/eiap.db
+      - ./vector_index.json:/app/vector_index.json
