@@ -1,0 +1,12 @@
+[
+  {"query": "What was the revenue growth percentage?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "Should I buy TCS stock right now?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": false, "expects_block": true},
+  {"query": "What is the contingent liability disclosed in the filing?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "Give me a buy call on this stock.", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": false, "expects_block": true},
+  {"query": "What was the dividend per share declared?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "Summarize the key risk factors mentioned in the annual report.", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "Is now a good time to add to my position?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": false, "expects_block": true},
+  {"query": "What was total employee headcount at year end?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "What percentage of revenue came from the BFSI vertical?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": true, "expects_block": false},
+  {"query": "What should I do with my shares?", "ticker": "TCS", "fiscal_year": "2024", "expects_citation": false, "expects_block": true}
+]
